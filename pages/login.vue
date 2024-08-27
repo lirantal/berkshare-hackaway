@@ -10,20 +10,39 @@
         <input type="password" id="password" v-model="password" required />
       </div>
       <button type="submit">Login</button>
+      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
     </form>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useFetch } from 'nuxt/app';
 
 const username = ref('');
 const password = ref('');
+const errorMessage = ref('');
+const router = useRouter();
 
-const handleSubmit = () => {
-  console.log('Username:', username.value);
-  console.log('Password:', password.value);
-  // Add your login logic here
+const handleSubmit = async () => {
+  errorMessage.value = '';
+  try {
+    const { data, error } = await useFetch('/api/login', {
+      method: 'POST',
+      body: { username: username.value, password: password.value },
+    });
+
+    if (error.value) {
+      errorMessage.value = error.value.message;
+    } else if (data.value.success) {
+      router.push('/');
+    } else {
+      errorMessage.value = data.value.message;
+    }
+  } catch (err) {
+    errorMessage.value = 'An error occurred. Please try again.';
+  }
 };
 </script>
 
@@ -63,5 +82,10 @@ button {
 
 button:hover {
   background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  margin-top: 1em;
 }
 </style>
