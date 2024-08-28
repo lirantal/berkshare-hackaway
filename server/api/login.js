@@ -11,6 +11,12 @@ export default defineEventHandler(async (event) => {
   );
 
   if (user) {
+    await setUserSession(event, {
+      user: {
+        username: user.username,
+      },
+      loggedInAt: new Date().toISOString(),
+    })
     return { success: true, message: 'Login successful' };
   } else {
     return { success: false, message: 'Invalid username or password' };

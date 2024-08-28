@@ -36,7 +36,10 @@ const handleSubmit = async () => {
     if (error.value) {
       errorMessage.value = error.value.message;
     } else if (data.value.success) {
-      router.push('/');
+    
+        // @TBD replace native DOM API with native vue-router API
+        // `router.push('/');` once we add proper reactivity to the app
+        window.location.href = '/';
     } else {
       errorMessage.value = data.value.message;
     }
