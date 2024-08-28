@@ -1,8 +1,6 @@
 <template>
-    <div>
-        Hello
-    </div>
-
+    <div class="h-screen w-screen flex justify-center items-center">
+        
     <div>
         <div v-if="loggedIn">
             <p>Welcome back, {{ user.name }}!</p>
@@ -10,10 +8,13 @@
         </div>
         <div v-else>
             <p>You are not logged in.</p>
-            <nuxt-link to="/login">Log in</nuxt-link>
+            <Button>
+                <nuxt-link to="/login">Log in</nuxt-link>
+            </Button>
         </div>
     </div>
     
+</div>
 
 </template>
 
