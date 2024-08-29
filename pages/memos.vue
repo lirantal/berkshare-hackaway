@@ -41,7 +41,7 @@
 
     <hr class="m-10"/>
 
-    <Card class="max-w-4xl mt-4">
+    <Card class="max-w-4xl mt-4" v-for="memo in data.memos" :key="memo.id">
     <CardContent>
         <div class="flex items-center gap-4 mt-4">
               <Avatar class="hidden h-9 w-9 sm:flex">
@@ -50,8 +50,7 @@
               </Avatar>
               <div class="grid gap-1">
                 <p class="text-sm">
-                  My message for doing something about something is this and lorem ipsumim My message for doing something about something is this and lorem ipsumim My message for doing something about something is this and lorem ipsumim My message for doing something about something is this and lorem ipsumim 
-                  My message for doing something about something is this and lorem ipsumim My message for doing something about something is this and lorem ipsumim
+                  {{memo.user}}: {{ memo.text }}
                 </p>
             </div>
         </div>
@@ -81,4 +80,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+
+const { data, status } = await useFetch('/api/memos')
+
 </script>
