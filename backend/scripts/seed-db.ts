@@ -7,11 +7,19 @@ const users = [
         username: "admin",
         password: "admin",
         role: "admin",
+        full_name: "Fisher Stevens",
+        address: "5 Wallstreet Avenue, New York, NY 10003",
+        phone_number: "(212) 998-5117",
+        email: "fisher@gibson.com"
     },
     {
         username: "dade",
         password: "gibson",
         role: "user",
+        full_name: "Dade Murphy",
+        address: "1 Washington Square, New York, NY 97211",
+        phone_number: "(212) 998-1337",
+        email: "dade-murphy@nyu.edu"
     },
 ]
 
@@ -61,5 +69,18 @@ if (usersInDatabase <= 0) {
             user.username,
             passwordHash
         );
-    }
+
+        console.log(`Creating user profile for: ${user.username}`);
+        db.prepare(`
+            INSERT INTO user_profile (user_id, full_name, email, address, phone_number)
+            VALUES(?, ?, ?, ?, ?)`
+            ).run(
+                userId,
+                user.full_name,
+                user.email,
+                user.address,
+                user.phone_number
+            );
+        }
+    
 }
