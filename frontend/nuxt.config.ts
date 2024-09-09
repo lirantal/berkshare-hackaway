@@ -18,4 +18,7 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui'
   },
+  routeRules: {
+    '/api/**': { proxy: 'http://localhost:3005/api/**' },
+  }
 })
