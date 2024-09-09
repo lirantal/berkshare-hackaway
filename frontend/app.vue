@@ -9,20 +9,17 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+
 let loading = ref(true)
 let loggedIn = ref(false)
-let user = ref({})
+
+const userData = useUserStore();
 
 onMounted(async () => {
-    try {
-        const userDetails = await $fetch('/api/user')
-        user.value = userDetails
-        loggedIn.value = !!userDetails.user_id
-        loading.value = false
-    } catch (error) {
-        console.error(error)
-    } finally {
+    await callOnce(userData.fetchUser)
+    if (userData.user_id) {
+        loggedIn.value = true
         loading.value = false
     }
 })

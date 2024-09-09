@@ -11,12 +11,14 @@
     "ui:add": "npx shadcn-vue@latest add"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.4",
     "@vueuse/core": "^11.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-vue-next": "^0.436.0",
     "nuxt": "^3.13.0",
     "nuxt-auth-utils": "^0.3.4",
+    "pinia": "^2.2.2",
     "radix-vue": "^1.9.5",
     "shadcn-nuxt": "^0.10.4",
     "sqlite": "^5.1.1",
@@ -28,5 +30,8 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.12.1",
     "typescript": "^5.5.4"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

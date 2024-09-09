@@ -84,6 +84,9 @@
           </div>
         </form>
         <DropdownMenu>
+          <div class="">
+            Welcome, {{ userData.full_name }}
+          </div>
           <DropdownMenuTrigger as-child>
             <Button variant="secondary" size="icon" class="rounded-full">
               <CircleUser class="h-5 w-5" />
@@ -100,8 +103,8 @@
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+     
     </header>
-
     <main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <slot />
     </main>
@@ -114,4 +117,7 @@ import { Button } from '~/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '~/components/ui/dropdown-menu'
 import { Input } from '~/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
+
+const userData = useUserStore()
+
 </script>

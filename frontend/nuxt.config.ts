@@ -5,7 +5,8 @@ export default defineNuxtConfig({
   modules: [
     'nuxt-auth-utils',
     '@nuxtjs/tailwindcss',
-    'shadcn-nuxt'
+    'shadcn-nuxt',
+    '@pinia/nuxt'
   ],
   shadcn: {
     /**
