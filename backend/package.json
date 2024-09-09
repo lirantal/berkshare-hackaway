@@ -4,7 +4,8 @@
 	"main": "index.js",
 	"type": "module",
 	"scripts": {
-		"dev": "tsx watch index.ts"
+		"dev": "tsx watch index.ts",
+		"db:seed": "tsx scripts/seed-db.ts"
 	},
 	"devDependencies": {
 		"@types/better-sqlite3": "^7.6.8",

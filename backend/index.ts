@@ -1,5 +1,4 @@
 import express from "express";
-
 import { lucia } from "./lib/auth.js";
 
 import { loginRouter } from "./routes/login.js";
