@@ -1,15 +1,17 @@
 import express from "express";
 import { lucia } from "./lib/auth.js";
 
-import { loginRouter } from "./routes/login.js";
-import { signupRouter } from "./routes/signup.js";
-import { logoutRouter } from "./routes/logout.js";
+import { userRouter } from "./routes/user.ts";
+import { loginRouter } from "./routes/login.ts";
+import { signupRouter } from "./routes/signup.ts";
+import { logoutRouter } from "./routes/logout.ts";
 
 import type { User, Session } from "lucia";
 
 const app = express();
 
 app.use(express.urlencoded());
+app.use(express.json());
 
 app.use(async (req, res, next) => {
 	const sessionId = lucia.readSessionCookie(req.headers.cookie ?? "");
@@ -32,7 +34,7 @@ app.use(async (req, res, next) => {
 });
 
 const apiRouter = express.Router();
-apiRouter.use(loginRouter, signupRouter, logoutRouter);
+apiRouter.use(userRouter, loginRouter, signupRouter, logoutRouter);
 app.use("/api", apiRouter);
 
 app.listen(3005);

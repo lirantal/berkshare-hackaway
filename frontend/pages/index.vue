@@ -3,7 +3,7 @@
         
     <div>
         <div v-if="loggedIn">
-            <p>Welcome back, {{ user.name }}!</p>
+            <p>Welcome back, {{ user.full_name }}!</p>
             <button @click="clear">Log out</button>
         </div>
         <div v-else>
@@ -19,5 +19,15 @@
 </template>
 
 <script setup>
-const { loggedIn, user, session, fetch, clear } = useUserSession()
+import { onMounted } from 'vue';
+
+let loggedIn = ref(false)
+let user = ref({})
+
+onMounted(async () => {
+    const userDetails = await $fetch('/api/user')
+    user.value = userDetails
+    loggedIn.value = !!userDetails.user_id
+})
+
 </script>
