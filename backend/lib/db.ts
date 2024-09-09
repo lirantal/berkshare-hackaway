@@ -1,6 +1,6 @@
-import sqlite from "better-sqlite3";
+import Database from "better-sqlite3";
 
-export const db = sqlite(":memory:");
+export const db = new Database('database.db', { verbose: console.log });
 
 export interface DatabaseUser {
 	id: string;
