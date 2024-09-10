@@ -59,7 +59,7 @@
           </Avatar>
           <div class="grid gap-1">
             <p class="text-sm">
-              {{memo.full_name}}: {{ memo.text }}
+              <span class="font-bold">{{memo.full_name}}</span>: {{ memo.text }}
             </p>
           </div>
         </div>
@@ -70,9 +70,9 @@
           Customer contact information
         </Badge>
         <div class="flex mx-5">
-          <span class="mx-4">Phone: {{ memo.meta.phone_number }}</span>
-          <span class="mx-4">Callback number: {{ memo.meta.callback_phone_number }}</span>
-          <span class="mx-4">Urgency: {{ memo.meta.urgency }}</span>
+          <span class="mx-4"><span class="font-bold block">Phone:</span> {{ memo.meta.phone_number }}</span>
+          <span class="mx-4"><span class="font-bold block">Callback number:</span> {{ memo.meta.callback_phone_number }}</span>
+          <span class="mx-4"><span class="font-bold block">Urgency:</span> <span :class="{'text-danger': memo.meta.urgency === 'high', 'text-warning': memo.meta.urgency === 'medium', 'text-ok': memo.meta.urgency === 'low'}"> {{ memo.meta.urgency }}</span></span>
         </div>
       </div>
     </CardFooter>
@@ -141,3 +141,17 @@ const parsedMemos = computed(() => {
 });
 
 </script>
+
+<style scoped>
+.text-danger {
+  color: red;
+}
+
+.text-warning {
+  color: orange;
+}
+
+.text-ok {
+  color: green;
+}
+</style>
