@@ -1,6 +1,7 @@
 import express from "express";
 import { lucia } from "./lib/auth.js";
 
+import { memosRouter } from "./routes/memos.ts";
 import { userRouter } from "./routes/user.ts";
 import { loginRouter } from "./routes/login.ts";
 import { signupRouter } from "./routes/signup.ts";
@@ -34,7 +35,7 @@ app.use(async (req, res, next) => {
 });
 
 const apiRouter = express.Router();
-apiRouter.use(userRouter, loginRouter, signupRouter, logoutRouter);
+apiRouter.use(memosRouter, userRouter, loginRouter, signupRouter, logoutRouter);
 app.use("/api", apiRouter);
 
 app.listen(3005);

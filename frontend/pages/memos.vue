@@ -59,7 +59,7 @@
               </Avatar>
               <div class="grid gap-1">
                 <p class="text-sm">
-                  {{memo.user}}: {{ memo.text }}
+                  {{memo.full_name}}: {{ memo.text }}
                 </p>
             </div>
         </div>
@@ -90,9 +90,7 @@ import { Label } from '~/components/ui/label'
 import { Button } from '~/components/ui/button'
 import { Textarea } from '~/components/ui/textarea'
 
-import { useFetch } from '@vueuse/core'
-
-const { data, refresh } = await useFetch('/api/memos')
+const { data, refresh } = await useFetch('/api/memos');
 
 const text = defineModel('text');
 const phone = defineModel('phone');

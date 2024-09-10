@@ -54,6 +54,17 @@ db.exec(`
     )
 `);
 
+db.exec(`
+    CREATE TABLE IF NOT EXISTS memos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL,
+      text TEXT NOT NULL,
+      meta TEXT NOT NULL DEFAULT '{}',
+      date TEXT NOT NULL,
+      FOREIGN KEY(user_id) REFERENCES user(id)
+    )
+`);
+
 
 const usersInDatabase: Number = db.prepare('SELECT COUNT(*) as count FROM user').pluck().get();
 
