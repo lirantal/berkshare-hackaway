@@ -50,20 +50,32 @@
 
     <hr class="m-10"/>
 
-    <Card class="max-w-4xl mt-4" v-for="memo in data?.memos" :key="memo.id">
+    <Card class="max-w-4xl mt-4" v-for="memo in parsedMemos" :key="memo.id">
     <CardContent>
         <div class="flex items-center gap-4 mt-4">
-              <Avatar class="hidden h-9 w-9 sm:flex">
-                <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                <AvatarFallback>OM</AvatarFallback>
-              </Avatar>
-              <div class="grid gap-1">
-                <p class="text-sm">
-                  {{memo.full_name}}: {{ memo.text }}
-                </p>
-            </div>
+          <Avatar class="hidden h-9 w-9 sm:flex">
+            <AvatarImage src="/avatars/01.png" alt="Avatar" />
+            <AvatarFallback>OM</AvatarFallback>
+          </Avatar>
+          <div class="grid gap-1">
+            <p class="text-sm">
+              {{memo.full_name}}: {{ memo.text }}
+            </p>
+          </div>
         </div>
     </CardContent>
+    <CardFooter>
+      <div class="flex flex-row">
+        <Badge variant="outline" class="flex text-center">
+          Customer contact information
+        </Badge>
+        <div class="flex mx-5">
+          <span class="mx-4">Phone: {{ memo.meta.phone_number }}</span>
+          <span class="mx-4">Callback number: {{ memo.meta.callback_phone_number }}</span>
+          <span class="mx-4">Urgency: {{ memo.meta.urgency }}</span>
+        </div>
+      </div>
+    </CardFooter>
   </Card>
 
   </div>
@@ -103,7 +115,7 @@ const sendMemo = async () => {
     body: {
       text: text.value,
       meta: JSON.stringify({
-        phone: phone.value,
+        callback_phone_number: phone.value,
         urgency: urgency.value
       })
     }
@@ -117,5 +129,15 @@ const sendMemo = async () => {
   }
 
 }
+
+const parsedMemos = computed(() => {
+  
+  return data?.value?.memos?.map((memo) => {
+    return {
+      ...memo,
+      meta: JSON.parse(memo.meta),
+    };
+  });
+});
 
 </script>
