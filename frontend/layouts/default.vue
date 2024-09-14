@@ -21,6 +21,12 @@
         >
           Memos
         </a>
+        <a
+          href="/bank_profile"
+          class="text-muted-foreground transition-colors hover:text-foreground whitespace-nowrap"
+        >
+          Bank Profile
+        </a>
       </nav>
       <Sheet>
         <SheetTrigger as-child>
