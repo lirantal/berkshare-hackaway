@@ -11,6 +11,8 @@
 
 <script setup lang="ts">
 
+const router = useRouter()
+
 let loading = ref(true)
 let loggedIn = ref(false)
 
@@ -21,6 +23,9 @@ onMounted(async () => {
     if (userData.user_id) {
         loggedIn.value = true
         loading.value = false
+    } else {
+        loading.value = false;
+        router.push('/login')
     }
 })
 
