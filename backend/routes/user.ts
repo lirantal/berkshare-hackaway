@@ -22,3 +22,25 @@ userRouter.get('/user', (req, res) => {
         role: userProfile.role
     })
 });
+
+userRouter.get('/users', (req, res) => {
+    if (!res.locals.user) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    if (!res.locals.user.isAdmin) {
+        return res.status(401).send('Unauthorized');
+    }
+
+    const users = db.prepare(`SELECT user.id as id,
+        user_profile.full_name as full_name, bank_profile.id as bank_profile_id 
+        FROM user
+        JOIN user_profile ON user.id = user_profile.user_id
+        JOIN bank_profile ON user.id = bank_profile.user_id
+        `).all();
+
+    return res.status(200).json({
+        status: 'success',
+        users
+    })
+});

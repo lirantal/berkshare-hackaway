@@ -7,7 +7,24 @@
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <form>
+                <div class="flex flex-col py-6">
+                    <Label class="py-2" for="customers">Select customer</Label>
+                    <Select v-model="userId">
+                        <SelectTrigger id="customers">
+                            <SelectValue placeholder="Select" />
+                        </SelectTrigger>
+                        <SelectContent position="popper">
+                            <SelectGroup v-for="user in data.users"
+                                :key="user.id">
+                                <SelectItem :value="user.id">
+                                    {{ user.full_name }}
+                                </SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                <form v-if="bank_profile_id" class="">
                     <div class="grid items-center w-full gap-4">
                         <div class="flex flex-col space-y-1.5">
                             <Label for="Opening Balance">Opening balance</Label>
@@ -33,25 +50,23 @@
 
                         <div class="flex flex-col space-y-1.5">
                             <Label for="Account Number">Account Number</Label>
-                            <Input v-model="account_number"
-                                disabled
+                            <Input v-model="account_number" disabled
                                 id="account_number" />
                         </div>
 
                         <input type="hidden" :value="bank_profile_id" />
-
                     </div>
                 </form>
             </CardContent>
             <CardFooter v-if="userData.role === 'admin'"
-                    class="flex justify-end px-6 pb-6">
+                class="flex justify-end px-6 pb-6">
                 <Button @click="save">Save</Button>
             </CardFooter>
         </Card>
     </div>
 </template>
 
-<script setup lang='ts'>
+<script setup lang="ts">
 import {
     Card,
     CardContent,
@@ -59,28 +74,38 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '~/components/ui/card'
-import { Input } from '~/components/ui/input'
-import { Label } from '~/components/ui/label'
-import { Button } from '~/components/ui/button'
+} from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Button } from "~/components/ui/button";
 
-const { data, refresh } = await useFetch('/api/bank_profile');
+const userId = ref();
 
 const userData = useUserStore();
 
-const opening_balance = ref('');
-const fee_per_transaction = ref('');
-const credit_limit = ref('');
-const account_number = ref('');
-const bank_profile_id = ref('');
+const opening_balance = ref("");
+const fee_per_transaction = ref("");
+const credit_limit = ref("");
+const account_number = ref("");
+const bank_profile_id = ref("");
 
-if (data.value) {
-    opening_balance.value = data.value.bank_profile.opening_balance;
-    fee_per_transaction.value = data.value.bank_profile.fee_per_transaction;
-    credit_limit.value = data.value.bank_profile.credit_limit;
-    account_number.value = data.value.bank_profile.account_number;
-    bank_profile_id.value = data.value.bank_profile.id;
-}
+const { data } = await useFetch("/api/users");
+
+watch(userId, async () => {
+    if (userId.value) {
+        const data = await $fetch(`/api/bank_profile/${userId.value}`);
+
+        opening_balance.value = data.bank_profile.opening_balance;
+        fee_per_transaction.value = data.bank_profile.fee_per_transaction;
+        credit_limit.value = data.bank_profile.credit_limit;
+        account_number.value = data.bank_profile.account_number;
+        bank_profile_id.value = data.bank_profile.id;
+    }
+});
+
+// @TODO fix this page to load just fine for a normal user and not an admin.
+// we can do it by updating the userId programatically (instead of the dropdown)
+// if the user role is not admin and then trigger a mutation for watch
 
 const save = async () => {
 
@@ -93,7 +118,7 @@ const save = async () => {
             opening_balance: opening_balance.value,
             fee_per_transaction: fee_per_transaction.value,
             credit_limit: credit_limit.value,
-            bank_profile_id: bank_profile_id.value
+            user_id: userId.value
         }
     })
 
@@ -102,5 +127,4 @@ const save = async () => {
     }
 
 }
-
 </script>
