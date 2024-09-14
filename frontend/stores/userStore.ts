@@ -6,6 +6,7 @@ export const useUserStore = defineStore("user", {
     email: null,
     address: null,
     phone_number: null,
+    role: 'user'
   }),
   actions: {
     async fetchUser() {
@@ -17,6 +18,7 @@ export const useUserStore = defineStore("user", {
         this.email = response.email;
         this.address = response.address;
         this.phone_number = response.phone_number;
+        this.role = response.role;
       } catch (err) {
         // user is not logged-in
       }

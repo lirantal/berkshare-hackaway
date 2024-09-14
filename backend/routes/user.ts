@@ -8,7 +8,9 @@ userRouter.get('/user', (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
-    const userProfile = db.prepare('SELECT * FROM user_profile WHERE user_id = ?').get(res.locals.user.id);
+    const userProfile = db.prepare(`SELECT * FROM user_profile
+        JOIN user ON user_profile.user_id = user.id
+        WHERE user_id = ?`).get(res.locals.user.id);
 
     return res.status(200).json({
         username: res.locals.user.username,
@@ -16,6 +18,7 @@ userRouter.get('/user', (req, res) => {
         full_name: userProfile.full_name,
         email: userProfile.email,
         address: userProfile.address,
-        phone_number: userProfile.phone_number
+        phone_number: userProfile.phone_number,
+        role: userProfile.role
     })
 });
