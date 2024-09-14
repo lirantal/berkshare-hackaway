@@ -1,5 +1,6 @@
 import express from "express";
 import { lucia } from "./lib/auth.js";
+import { db } from "./lib/db.ts";
 
 import { bankProfileRouter } from "./routes/bank_profile.ts";
 import { memosRouter } from "./routes/memos.ts";
@@ -32,6 +33,14 @@ app.use(async (req, res, next) => {
 	}
 	res.locals.session = session;
 	res.locals.user = user;
+
+	if (user && user.id) {
+		const userAttribute = db.prepare("SELECT role FROM user WHERE id = ?").get(user.id);
+		if (user?.id && userAttribute.role === 'admin') {
+			res.locals.user.isAdmin = true;
+		}
+	}
+	
 	return next();
 });
 
