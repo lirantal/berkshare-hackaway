@@ -23,11 +23,25 @@ bankProfileRouter.post('/bank_profile', (req, res) => {
 
     if (res.locals.user.isAdmin) {
         console.log(`Detected admin user: ${res.locals.user.username}`);
+    } else {
+        return res.status(401).send('Unauthorized');
     }
-
-    // @TODO implementation for saving bank profile
+    db.prepare(`
+        UPDATE bank_profile
+        SET
+            opening_balance = :opening_balance,
+            fee_per_transaction = :fee_per_transaction,
+            credit_limit = :credit_limit
+        WHERE id = :bank_profile_id
+    `).run({
+        opening_balance: req.body.opening_balance,
+        fee_per_transaction: req.body.fee_per_transaction,
+        credit_limit: req.body.credit_limit,
+        bank_profile_id: req.body.bank_profile_id
+    });
 
     return res.status(200).json({
         success: true
     });
 });
+

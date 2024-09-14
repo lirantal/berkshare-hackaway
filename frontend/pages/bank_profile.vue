@@ -34,9 +34,11 @@
                         <div class="flex flex-col space-y-1.5">
                             <Label for="Account Number">Account Number</Label>
                             <Input v-model="account_number"
-                                :disabled="userData.role !== 'admin'"
+                                disabled
                                 id="account_number" />
                         </div>
+
+                        <input type="hidden" :value="bank_profile_id" />
 
                     </div>
                 </form>
@@ -70,12 +72,14 @@ const opening_balance = ref('');
 const fee_per_transaction = ref('');
 const credit_limit = ref('');
 const account_number = ref('');
+const bank_profile_id = ref('');
 
 if (data.value) {
     opening_balance.value = data.value.bank_profile.opening_balance;
     fee_per_transaction.value = data.value.bank_profile.fee_per_transaction;
     credit_limit.value = data.value.bank_profile.credit_limit;
     account_number.value = data.value.bank_profile.account_number;
+    bank_profile_id.value = data.value.bank_profile.id;
 }
 
 const save = async () => {
@@ -86,7 +90,10 @@ const save = async () => {
     const response = await $fetch('/api/bank_profile', {
         method: 'POST',
         body: {
-            opening_balance,
+            opening_balance: opening_balance.value,
+            fee_per_transaction: fee_per_transaction.value,
+            credit_limit: credit_limit.value,
+            bank_profile_id: bank_profile_id.value
         }
     })
 
