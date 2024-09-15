@@ -10,7 +10,7 @@
           <span class="sr-only">Acme Inc</span>
         </a>
         <a
-          href="#"
+          href="/"
           class="text-foreground transition-colors hover:text-foreground"
         >
           Dashboard
