@@ -7,14 +7,14 @@
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div class="flex flex-col py-6">
+                <div class="flex flex-col py-6" v-if="userData.role === 'admin'">
                     <Label class="py-2" for="customers">Select customer</Label>
                     <Select v-model="userId">
                         <SelectTrigger id="customers">
                             <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent position="popper">
-                            <SelectGroup v-for="user in data.users"
+                            <SelectGroup v-for="user in usersList"
                                 :key="user.id">
                                 <SelectItem :value="user.id">
                                     {{ user.full_name }}
@@ -79,9 +79,10 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
 
-const userId = ref();
-
 const userData = useUserStore();
+
+const userId = ref();
+const usersList = ref([]);
 
 const opening_balance = ref("");
 const fee_per_transaction = ref("");
@@ -89,7 +90,17 @@ const credit_limit = ref("");
 const account_number = ref("");
 const bank_profile_id = ref("");
 
-const { data } = await useFetch("/api/users");
+
+onMounted(async () => {
+    
+    if (userData.role === 'admin') {
+        const response = await $fetch("/api/users");
+        usersList.value = response.users
+    } else {
+        userId.value = userData.user_id
+    }
+    
+})
 
 watch(userId, async () => {
     if (userId.value) {
@@ -103,16 +114,9 @@ watch(userId, async () => {
     }
 });
 
-// @TODO fix this page to load just fine for a normal user and not an admin.
-// we can do it by updating the userId programatically (instead of the dropdown)
-// if the user role is not admin and then trigger a mutation for watch
-
 const save = async () => {
 
-    // @TODO implement properly the saving of data
-    // and only allow admins to update in this form
-
-    const response = await $fetch('/api/bank_profile', {
+    await $fetch('/api/bank_profile', {
         method: 'POST',
         body: {
             opening_balance: opening_balance.value,
@@ -121,10 +125,6 @@ const save = async () => {
             user_id: userId.value
         }
     })
-
-    if (response?.success === true) {
-        refresh()
-    }
 
 }
 </script>
