@@ -7,10 +7,10 @@ const users = [
         username: "admin",
         password: "admin",
         role: "admin",
-        full_name: "Fisher Stevens",
+        full_name: "Eugene Belford",
         address: "5 Wallstreet Avenue, New York, NY 10003",
         phone_number: "(212) 998-5117",
-        email: "fisher@gibson.com"
+        email: "eugene@gibson.com"
     },
     {
         username: "dade",
