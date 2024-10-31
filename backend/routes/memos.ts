@@ -38,7 +38,6 @@ memosRouter.post("/memos", (req, res) => {
   }
 
   const text = req.body.text;
-  const meta = req.body.meta || "{}";
 
   if (!text) {
     return res.status(400).json({
@@ -47,34 +46,23 @@ memosRouter.post("/memos", (req, res) => {
     });
   }
 
-  const baseContactInformation = db
-    .prepare(
-      `SELECT user_profile.email, user_profile.address, user_profile.phone_number FROM user_profile WHERE user_profile.user_id = ?`
-    )
-    .get(res.locals.user.id);
-  const contactInMemo = JSON.parse(meta);
-  const userExtendedMeta = recursiveJSONMerge(
-    baseContactInformation,
-    contactInMemo
-  );
+
+  // @TODO add support for metadata in the memo
+  // so we can track additional user-specific information
+  // about the request
+  // const baseContactInformation = db
+  //   .prepare(
+  //     `SELECT user_profile.email, user_profile.address, user_profile.phone_number FROM user_profile WHERE user_profile.user_id = ?`
+  //   )
+  //   .get(res.locals.user.id);
+
 
   const date = new Date().toISOString();
   db.prepare(
-    "INSERT INTO memos (user_id, text, meta, date) VALUES (?, ?, ?, ?)"
-  ).run(res.locals.user.id, text, JSON.stringify(userExtendedMeta), date);
+    "INSERT INTO memos (user_id, text, date) VALUES (?, ?, ?)"
+  ).run(res.locals.user.id, text, date);
 
   return res.status(200).json({
     success: true,
   });
 });
-
-function recursiveJSONMerge(target, source) {
-  for (const key in source) {
-    if (source[key] instanceof Object) {
-      target[key] = recursiveJSONMerge(target[key] || {}, source[key]);
-    } else {
-      target[key] = source[key];
-    }
-  }
-  return target;
-}
