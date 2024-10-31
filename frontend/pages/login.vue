@@ -1,18 +1,44 @@
 <template>
-  <div class="login-container">
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" v-model="username" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" v-model="password" required />
-      </div>
-      <button type="submit">Login</button>
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-    </form>
-  </div>
+
+
+<div class="flex align-middle text-center justify-center pt-24">
+        <Card class="">
+            <CardHeader>
+                <CardTitle>App Login</CardTitle>
+                <CardDescription>Welcome to Berkshare Hackaway</CardDescription>
+            </CardHeader>
+            <CardContent>
+
+              <div class="grid items-center w-full gap-4">
+                <form @submit.prevent="handleSubmit">
+
+                  <div class="grid items-center w-full gap-4">
+                        <div class="flex flex-col space-y-1.5 text-left">
+                            <Label for="username">Username</Label>
+                            <Input v-model="username"
+                                required
+                                id="username" />
+                        </div>
+                        <div class="flex flex-col space-y-1.5 text-left">
+                          <Label for="password">Password</Label>
+                            <Input v-model="password"
+                                required
+                                id="password" />
+                        </div>
+                  </div>
+                  
+                </form>
+              </div>
+
+            </CardContent>
+            <CardFooter>
+                <Button @click="handleSubmit">Login</Button>
+            </CardFooter>
+            <div class="block p-4">
+              <p v-if="errorMessage" class="text-red-500">Login error</p>
+            </div>
+        </Card>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -53,47 +79,3 @@ const handleSubmit = async () => {
   }
 };
 </script>
-
-<style scoped>
-.login-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 1em;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.form-group {
-  margin-bottom: 1em;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5em;
-}
-
-input {
-  width: 100%;
-  padding: 0.5em;
-  box-sizing: border-box;
-}
-
-button {
-  width: 100%;
-  padding: 0.7em;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
-.error {
-  color: red;
-  margin-top: 1em;
-}
-</style>
