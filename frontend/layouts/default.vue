@@ -110,7 +110,7 @@
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem>Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <DropdownMenuItem @click="logout">Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -130,5 +130,13 @@ import { Input } from '~/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '~/components/ui/sheet'
 
 const userData = useUserStore()
+
+async function logout() {
+  await $fetch('/api/logout', {
+    method: 'POST',
+  })
+
+  window.location.href = '/login'
+}
 
 </script>
