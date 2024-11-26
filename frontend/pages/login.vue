@@ -22,6 +22,7 @@
                         <div class="flex flex-col space-y-1.5 text-left">
                           <Label for="password">Password</Label>
                             <Input v-model="password"
+                                type="password"
                                 required
                                 id="password" />
                         </div>
