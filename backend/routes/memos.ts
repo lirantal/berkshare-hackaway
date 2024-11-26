@@ -68,9 +68,8 @@ memosRouter.post("/memos", (req, res) => {
   });
 });
 
-// @TODO function for recursive merging of baseContactInformation
-// allows us to set target[key] for nested objects in the source JSON
-// like target[key] = recursiveJSONMerge(target[key], source[key])
+// @TODO a function recursiveJSONMerge to deeply merge the object source contactInMemo
+// into the target object baseContactInformation
 function recursiveJSONMerge(target, source) {
   for (const key in source) {
     if (source[key] instanceof Object) {
