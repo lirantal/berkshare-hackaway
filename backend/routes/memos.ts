@@ -38,7 +38,7 @@ memosRouter.post("/memos", (req, res) => {
   }
 
   const text = req.body.text;
-  const meta = req.body.meta || "{}";
+  const meta = req.body.meta;
 
   if (!text) {
     return res.status(400).json({
@@ -52,11 +52,8 @@ memosRouter.post("/memos", (req, res) => {
       `SELECT user_profile.email, user_profile.address, user_profile.phone_number FROM user_profile WHERE user_profile.user_id = ?`
     )
     .get(res.locals.user.id);
-  const contactInMemo = JSON.parse(meta);
-  const userExtendedMeta = recursiveJSONMerge(
-    baseContactInformation,
-    contactInMemo
-  );
+  const contactMemo = JSON.parse(meta)
+  const userExtendedMeta = recursiveJSONMerge(baseContactInformation, contactMemo);
 
   const date = new Date().toISOString();
   db.prepare(
@@ -68,12 +65,12 @@ memosRouter.post("/memos", (req, res) => {
   });
 });
 
-// @TODO a function recursiveJSONMerge to deeply merge the object source contactInMemo
-// into the target object baseContactInformation
+// @TODO a function recursiveJSONMerge to deeply merge the object source contactMemo into the 
+// target object baseContactInformation and return the object with the merged values
 function recursiveJSONMerge(target, source) {
   for (const key in source) {
     if (source[key] instanceof Object) {
-      target[key] = recursiveJSONMerge(target[key] || {}, source[key]);
+      target[key] = recursiveJSONMerge(target[key], source[key]);
     } else {
       target[key] = source[key];
     }
