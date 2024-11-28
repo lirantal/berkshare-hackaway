@@ -14,7 +14,7 @@ bankStatementsRouter.post("/bank_statements", async (req, res) => {
 });
 
 bankStatementsRouter.get("/bank_statements", async (req, res, next) => {
-  let reportName = req.body.report_name;
+  let reportName = req.query.report_name;
 
   // should we apply some sanitization? maybe 🤷
   // if (reportName.startsWith('/')) {
