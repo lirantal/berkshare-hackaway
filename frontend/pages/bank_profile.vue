@@ -1,63 +1,80 @@
 <template>
     <div class="max-w-4xl">
-        <Card>
+        <Card>            
             <CardHeader>
                 <CardTitle>Bank Profile</CardTitle>
                 <CardDescription>Your financial profile profile
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div class="flex flex-col py-6" v-if="userData.role === 'admin'">
-                    <Label class="py-2" for="customers">Select customer</Label>
-                    <Select v-model="userId">
-                        <SelectTrigger id="customers">
-                            <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                            <SelectGroup v-for="user in usersList"
-                                :key="user.id">
-                                <SelectItem :value="user.id">
-                                    {{ user.full_name }}
-                                </SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
+
+                <div v-if="loading" class="flex items-center space-x-4">
+                    <Skeleton class="h-12 w-12 rounded-full" />
+                    <div class="space-y-2">
+                    <Skeleton class="h-4 w-[250px]" />
+                    <Skeleton class="h-4 w-[200px]" />
+                    </div>
                 </div>
 
-                <form v-if="bank_profile_id" class="">
-                    <div class="grid items-center w-full gap-4">
-                        <div class="flex flex-col space-y-1.5">
-                            <Label for="Opening Balance">Opening balance</Label>
-                            <Input v-model="opening_balance"
-                                :disabled="userData.role !== 'admin'"
-                                id="opening_balance" />
-                        </div>
-
-                        <div class="flex flex-col space-y-1.5">
-                            <Label for="Fee Per Transaction">Fee Per
-                                Transaction</Label>
-                            <Input v-model="fee_per_transaction"
-                                :disabled="userData.role !== 'admin'"
-                                id="fee_per_transaction" />
-                        </div>
-
-                        <div class="flex flex-col space-y-1.5">
-                            <Label for="Credit Limit">Credit Limit</Label>
-                            <Input v-model="credit_limit"
-                                :disabled="userData.role !== 'admin'"
-                                id="credit_limit" />
-                        </div>
-
-                        <div class="flex flex-col space-y-1.5">
-                            <Label for="Account Number">Account Number</Label>
-                            <Input v-model="account_number" disabled
-                                id="account_number" />
-                        </div>
-
-                        <input type="hidden" :value="bank_profile_id" />
+                <div v-else>
+                    <div class="flex flex-col py-6" v-if="userData.role === 'admin'">
+                        <Label class="py-2" for="customers">Select customer</Label>
+                        <Select v-model="userId">
+                            <SelectTrigger id="customers">
+                                <SelectValue placeholder="Select" />
+                            </SelectTrigger>
+                            <SelectContent position="popper">
+                                <SelectGroup v-for="user in usersList"
+                                    :key="user.id">
+                                    <SelectItem :value="user.id">
+                                        {{ user.full_name }}
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
                     </div>
-                </form>
+
+                    <form v-if="bank_profile_id" class="">
+                        <div class="grid items-center w-full gap-4">
+                            <div class="flex flex-col space-y-1.5">
+                                <Label for="Opening Balance">Opening balance</Label>
+                                <Input v-model="opening_balance"
+                                    :disabled="userData.role !== 'admin'"
+                                    id="opening_balance" />
+                            </div>
+
+                            <div class="flex flex-col space-y-1.5">
+                                <Label for="Fee Per Transaction">Fee Per
+                                    Transaction</Label>
+                                <Input v-model="fee_per_transaction"
+                                    :disabled="userData.role !== 'admin'"
+                                    id="fee_per_transaction" />
+                            </div>
+
+                            <div class="flex flex-col space-y-1.5">
+                                <Label for="Credit Limit">Credit Limit</Label>
+                                <Input v-model="credit_limit"
+                                    :disabled="userData.role !== 'admin'"
+                                    id="credit_limit" />
+                            </div>
+
+                            <div class="flex flex-col space-y-1.5">
+                                <Label for="Account Number">Account Number</Label>
+                                <Input v-model="account_number" disabled
+                                    id="account_number" />
+                            </div>
+
+                            <input type="hidden" :value="bank_profile_id" />
+                        </div>
+                    </form>
+                </div>
             </CardContent>
+
+            <CardFooter v-if="userData.role === 'user'"
+                class="flex justify-end px-6 pb-6">
+                <Button :disabled="loading" @click="generateBankStatement">Generate Bank Statement</Button>
+            </CardFooter>
+
             <CardFooter v-if="userData.role === 'admin'"
                 class="flex justify-end px-6 pb-6">
                 <Button @click="save">Save</Button>
@@ -78,6 +95,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Button } from "~/components/ui/button";
+import { Skeleton } from '@/components/ui/skeleton'
 
 const userData = useUserStore();
 
@@ -90,6 +108,7 @@ const credit_limit = ref("");
 const account_number = ref("");
 const bank_profile_id = ref("");
 
+const loading = ref(false);
 
 onMounted(async () => {
     
@@ -115,7 +134,6 @@ watch(userId, async () => {
 });
 
 const save = async () => {
-
     await $fetch('/api/bank_profile', {
         method: 'POST',
         body: {
@@ -127,4 +145,23 @@ const save = async () => {
     })
 
 }
+
+
+const generateBankStatement = async () => {
+
+    loading.value = true;
+
+    const data = await $fetch('/api/bank_statements', {
+        method: 'POST',
+        body: {
+            user_id: userId.value
+        }
+    })
+
+    loading.value = false;
+
+    const report_name = data.report_name;
+    window.open(`/api/bank_statements?report_name=${report_name}`, '_blank');
+}
+
 </script>
