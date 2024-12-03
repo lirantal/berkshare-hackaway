@@ -4,24 +4,25 @@ import path from "path";
 
 const ASSETS_DIRECTORY = "../assets/statements";
 
-export async function RetrieveAccountStatementPDF(filename: string) {
+export default class BankStatements {
+  async RetrieveAccountStatementPDF(filename: string) {
+    filename = decodeURIComponent(filename);
+    filename = path.normalize(filename);
 
-  filename = decodeURIComponent(filename);
-  filename = path.normalize(filename);
+    const filePath = path.join(process.cwd(), ASSETS_DIRECTORY, filename);
 
-  const filePath = path.join(process.cwd(), ASSETS_DIRECTORY, filename);
+    const fileContents = await readFile(filePath);
 
-  const fileContents = await readFile(filePath);
+    return fileContents;
+  }
 
-  return fileContents;
-}
-
-export async function GenerateAccountStatementPDF(accountId: string): Promise<{ reportName: string }> {
-
-  // mocked delay to simulate generating a PDF file
-  await setTimeout(5000);
-  return {
-    reportName: "U1mGpsjXMA26.pdf",
+  async GenerateAccountStatementPDF(
+    accountId: string
+  ): Promise<{ reportName: string }> {
+    // mocked delay to simulate generating a PDF file
+    await setTimeout(5000);
+    return {
+      reportName: "U1mGpsjXMA26.pdf",
+    };
   }
 }
-  
