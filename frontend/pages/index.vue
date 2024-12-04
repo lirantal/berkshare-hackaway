@@ -11,14 +11,17 @@ import { Button } from '~/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table'
 
+const userData = useUserStore();
+
 </script>
 
 <template>
-      <div class="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+      <!-- begin dashboard widgets -->
+      <div v-if="userData.role === 'admin'" class="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
         <Card>
           <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle class="text-sm font-medium">
-              Total Revenue
+              Total Managed Accounts Balance
             </CardTitle>
             <DollarSign class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -34,7 +37,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
         <Card>
           <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle class="text-sm font-medium">
-              Subscriptions
+              New Customers This Month
             </CardTitle>
             <Users class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -50,7 +53,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
         <Card>
           <CardHeader class="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle class="text-sm font-medium">
-              Sales
+              New Transactions This Month
             </CardTitle>
             <CreditCard class="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -80,13 +83,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
           </CardContent>
         </Card>
       </div>
-      <div class="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+      <!-- end dashboard widgets -->
+
+      <div v-if="userData.role === 'user'" class="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
         <Card class="xl:col-span-2">
           <CardHeader class="flex flex-row items-center">
             <div class="grid gap-2">
-              <CardTitle>Transactions</CardTitle>
+              <CardTitle>Checking Account</CardTitle>
               <CardDescription>
-                Recent transactions from your store.
+                Recent transactions in your checking account
               </CardDescription>
             </div>
             <Button as-child size="sm" class="ml-auto gap-1">
@@ -100,7 +105,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Customer</TableHead>
+                  <TableHead>Transaction</TableHead>
                   <TableHead class="hidden xl:table-column">
                     Type
                   </TableHead>
@@ -119,10 +124,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
                 <TableRow>
                   <TableCell>
                     <div class="font-medium">
-                      Liam Johnson
+                      Electro Power Bill
                     </div>
                     <div class="hidden text-sm text-muted-foreground md:inline">
-                      liam@example.com
+                      PO Box 12345
                     </div>
                   </TableCell>
                   <TableCell class="hidden xl:table-column">
@@ -136,17 +141,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
                   <TableCell class="hidden md:table-cell lg:hidden xl:table-column">
                     2023-06-23
                   </TableCell>
-                  <TableCell class="text-right">
-                    $250.00
+                  <TableCell class="text-right text-red-600">
+                    -$250.00
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     <div class="font-medium">
-                      Olivia Smith
+                      Mortgage Loan 30yr fixed
                     </div>
                     <div class="hidden text-sm text-muted-foreground md:inline">
-                      olivia@example.com
+                      Lehman Brother Bank LLC
                     </div>
                   </TableCell>
                   <TableCell class="hidden xl:table-column">
@@ -160,17 +165,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
                   <TableCell class="hidden md:table-cell lg:hidden xl:table-column">
                     2023-06-24
                   </TableCell>
-                  <TableCell class="text-right">
-                    $150.00
+                  <TableCell class="text-right text-red-600">
+                    -$2150.00
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     <div class="font-medium">
-                      Noah Williams
+                      Visa Credit Card
                     </div>
                     <div class="hidden text-sm text-muted-foreground md:inline">
-                      noah@example.com
+                      Visa 8916 card issued to Dade Murphy
                     </div>
                   </TableCell>
                   <TableCell class="hidden xl:table-column">
@@ -184,17 +189,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
                   <TableCell class="hidden md:table-cell lg:hidden xl:table-column">
                     2023-06-25
                   </TableCell>
-                  <TableCell class="text-right">
-                    $350.00
+                  <TableCell class="text-right text-red-600">
+                    -$920.00
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     <div class="font-medium">
-                      Emma Brown
+                      NVIDIA Corp
                     </div>
                     <div class="hidden text-sm text-muted-foreground md:inline">
-                      emma@example.com
+                      Recurring Payment
                     </div>
                   </TableCell>
                   <TableCell class="hidden xl:table-column">
@@ -208,17 +213,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
                   <TableCell class="hidden md:table-cell lg:hidden xl:table-column">
                     2023-06-26
                   </TableCell>
-                  <TableCell class="text-right">
-                    $450.00
+                  <TableCell class="text-right text-green-600">
+                    +$1250.00
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>
                     <div class="font-medium">
-                      Liam Johnson
+                      Insurance Premium
                     </div>
                     <div class="hidden text-sm text-muted-foreground md:inline">
-                      liam@example.com
+                      Life insurance +45 plan 
                     </div>
                   </TableCell>
                   <TableCell class="hidden xl:table-column">
@@ -232,8 +237,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
                   <TableCell class="hidden md:table-cell lg:hidden xl:table-column">
                     2023-06-27
                   </TableCell>
-                  <TableCell class="text-right">
-                    $550.00
+                  <TableCell class="text-right text-red-600">
+                    -$550.00
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -242,7 +247,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~
         </Card>
         <Card>
           <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
+            <CardTitle>Transactions</CardTitle>
           </CardHeader>
           <CardContent class="grid gap-8">
             <div class="flex items-center gap-4">
