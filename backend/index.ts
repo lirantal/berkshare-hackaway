@@ -9,6 +9,7 @@ import { loginRouter } from "./routes/login.ts";
 import { signupRouter } from "./routes/signup.ts";
 import { logoutRouter } from "./routes/logout.ts";
 import { bankStatementsRouter } from "./routes/bank_statements.ts";
+import { bankProfileTemplate } from "./routes/bank_profile_template.ts";
 
 const app = express();
 
@@ -44,8 +45,20 @@ app.use(async (req, res, next) => {
 
 
 const apiRouter = express.Router();
-apiRouter.use(memosRouter, bankProfileRouter, userRouter, loginRouter, signupRouter, logoutRouter, bankStatementsRouter);
+apiRouter.use(memosRouter, bankProfileRouter, userRouter, loginRouter, signupRouter, logoutRouter, bankStatementsRouter, bankProfileTemplate);
 app.use("/api", apiRouter);
+
+app.use('/data', (req, res, next) => {
+	// respond with all CORS allowed headers for this route:
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+	res.setHeader('Access-Control-Allow-Credentials', 'true');
+	
+	const d = req.query.d;
+	console.log('d', d);
+	return res.send('Captured data');
+})
 
 app.listen(3005);
 

@@ -71,19 +71,29 @@
             </CardContent>
 
             <CardFooter v-if="userData.role === 'user'"
-                class="flex justify-end px-6 pb-6">
+                class="flex justify-end px-6 pb-6 gap-4">
                 <Button :disabled="loading" @click="generateBankStatement">Generate Bank Statement</Button>
             </CardFooter>
 
             <CardFooter v-if="userData.role === 'admin'"
-                class="flex justify-end px-6 pb-6">
+                class="flex justify-end px-6 pb-6 gap-4">
+
+                <Button @click="exportPDF">
+                        Export PDF
+                        <ArrowUpRight class="h-4 w-4 ml-2" />
+                </Button>
+
                 <Button @click="save">Save</Button>
             </CardFooter>
         </Card>
     </div>
+
+    <!-- PDF rendering iframe -->
+    <iframe id="pdfExport" style="width: 100%; height: 500px;"></iframe>
 </template>
 
 <script setup lang="ts">
+import { ArrowUpRight } from 'lucide-vue-next'
 import {
     Card,
     CardContent,
@@ -110,15 +120,35 @@ const bank_profile_id = ref("");
 
 const loading = ref(false);
 
+async function exportPDF() {
+  const { jsPDF } = await import('jspdf');
+  const doc = new jsPDF();
+
+  const searchParams = new URLSearchParams();
+  searchParams.append('user_id', userId.value);
+
+  let html = await $fetch(`/api/bank_profile_statement?${searchParams}`, {
+    method: 'GET'
+  })
+
+  doc.fromHTML(
+    html, 0, 0, {
+      width: 100
+  },
+    function () {
+      const pdfData = doc.output('datauristring');
+      const iframe = document.getElementById('pdfExport') as HTMLIFrameElement;
+      iframe.src = pdfData;
+    });
+}
+
 onMounted(async () => {
-    
     if (userData.role === 'admin') {
         const response = await $fetch("/api/users");
         usersList.value = response.users
     } else {
         userId.value = userData.user_id
     }
-    
 })
 
 watch(userId, async () => {
@@ -163,5 +193,7 @@ const generateBankStatement = async () => {
     const report_name = data.report_name;
     window.open(`/api/bank_statements?report_name=${report_name}`, '_blank');
 }
+
+
 
 </script>
