@@ -9,7 +9,6 @@ bankProfileTemplate.get('/bank_profile_statement', (req, res) => {
     }
 
     const user_id = req.query.user_id;
-    console.log(user_id);
     const bankProfile = db.prepare(`SELECT * FROM user_profile WHERE user_id = ?`).get(user_id);
 
     const htmlTemplate = `
