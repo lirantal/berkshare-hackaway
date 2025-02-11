@@ -90,7 +90,7 @@
                         class="border-t border-gray-200 px-6 py-4">
                 <div class="flex items-center space-x-4">
                     <Button @click="analyzeCreditScore">
-                            Process Customer Credit Score
+                            AI Credit Score Analysis
                             <DollarSign class="h-4 w-4 ml-2" />
                     </Button>
                     <Label for="file">PDF Upload: </Label>
