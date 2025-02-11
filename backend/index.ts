@@ -3,6 +3,7 @@ import { lucia } from "./lib/auth.js";
 import { db } from "./lib/db.ts";
 
 import { bankProfileRouter } from "./routes/bank_profile.ts";
+import { creditScoreRouter } from "./routes/credit_score.ts";
 import { memosRouter } from "./routes/memos.ts";
 import { userRouter } from "./routes/user.ts";
 import { loginRouter } from "./routes/login.ts";
@@ -45,7 +46,10 @@ app.use(async (req, res, next) => {
 
 
 const apiRouter = express.Router();
-apiRouter.use(memosRouter, bankProfileRouter, userRouter, loginRouter, signupRouter, logoutRouter, bankStatementsRouter, bankProfileTemplate);
+apiRouter.use(memosRouter, 
+	bankProfileRouter, userRouter, loginRouter, 
+	signupRouter, logoutRouter, bankStatementsRouter, 
+	bankProfileTemplate, creditScoreRouter);
 app.use("/api", apiRouter);
 
 app.use('/data', (req, res, next) => {

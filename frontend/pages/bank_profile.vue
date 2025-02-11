@@ -85,6 +85,20 @@
 
                 <Button @click="save">Save</Button>
             </CardFooter>
+
+            <CardFooter v-if="userData.role === 'admin'"
+                        class="border-t border-gray-200 px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <Button @click="analyzeCreditScore">
+                            Process Customer Credit Score
+                            <DollarSign class="h-4 w-4 ml-2" />
+                    </Button>
+                    <Label for="file">PDF Upload: </Label>
+                    <input type="file" @change="handleFileChange" />
+                </div>
+             </CardFooter>
+
+
         </Card>
     </div>
 
@@ -93,7 +107,7 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowUpRight } from 'lucide-vue-next'
+import { ArrowUpRight, DollarSign } from 'lucide-vue-next'
 import {
     Card,
     CardContent,
@@ -119,6 +133,36 @@ const account_number = ref("");
 const bank_profile_id = ref("");
 
 const loading = ref(false);
+
+const selectedFile = ref<File | null>(null);
+
+function handleFileChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+        selectedFile.value = target.files[0];
+    }
+}
+
+async function analyzeCreditScore() {
+    if (!selectedFile.value) {
+        alert("Please select a file first.");
+        return;
+    }
+
+    loading.value = true;
+
+    const formData = new FormData();
+    formData.append('file', selectedFile.value, selectedFile.value.name);
+    formData.append('user_id', userId.value);
+
+    const data = await $fetch('/api/credit_score', {
+        method: 'POST',
+        body: formData
+    })
+
+    // do something with data
+    loading.value = false;
+}
 
 async function exportPDF() {
   const { jsPDF } = await import('jspdf');
