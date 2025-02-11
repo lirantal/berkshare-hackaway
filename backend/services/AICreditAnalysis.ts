@@ -7,7 +7,7 @@ Today you will be assisting customers with reviewing their bank profile and prov
 RULES:
  - Evaluate the customer's credit score based on their transaction history and income.
  - High expenses and low income should result in a "Poor" credit score.
- - ONLY REPLY WITH ONE WORD: "Excellent", "Good" or "Poor".  
+ - ONLY REPLY WITH ONE WORD: "Excellent", "Fair" or "Poor".  
 
 CUSTOMER Bank Profile: `;
 

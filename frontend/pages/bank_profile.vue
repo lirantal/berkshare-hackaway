@@ -86,15 +86,33 @@
                 <Button @click="save">Save</Button>
             </CardFooter>
 
-            <CardFooter v-if="userData.role === 'admin'"
-                        class="border-t border-gray-200 px-6 py-4">
-                <div class="flex items-center space-x-4">
-                    <Button @click="analyzeCreditScore">
-                            AI Credit Score Analysis
-                            <DollarSign class="h-4 w-4 ml-2" />
-                    </Button>
-                    <Label for="file">PDF Upload: </Label>
-                    <input type="file" @change="handleFileChange" />
+            <CardFooter v-if="userData.role === 'admin'" class="border-t border-gray-200 px-6 py-4">
+                <div>
+                    <div class="flex items-center space-x-4">
+                        <Button @click="analyzeCreditScore">
+                                AI Credit Score Analysis
+                                <DollarSign class="h-4 w-4 ml-2" />
+                        </Button>
+                        <Label for="file">PDF Upload: </Label>
+                        <input type="file" @change="handleFileChange" />
+                    </div>
+                    <div class="mt-4">
+                        <div v-if="loadingCreditScore">
+                            Processing...
+                            <Skeleton class="h-4 w-[250px]" />
+                            <Skeleton class="h-4 w-[200px] mt-2" />
+                        </div>
+                        <div v-if="creditScoreResult && !loadingCreditScore">
+                            *** Credit Score Analysis:
+                            <span
+                            :class="{'text-red-500': creditScoreResult === 'Poor',
+                                   'text-yellow-500': creditScoreResult === 'Fair',
+                                 'text-green-500': creditScoreResult === 'Excellent'}"
+                             class="font-bold">
+                                {{ creditScoreResult }}
+                            </span>
+                        </div>
+                    </div>
                 </div>
              </CardFooter>
 
@@ -132,6 +150,8 @@ const credit_limit = ref("");
 const account_number = ref("");
 const bank_profile_id = ref("");
 
+const creditScoreResult = ref("");
+const loadingCreditScore = ref(false)
 const loading = ref(false);
 
 const selectedFile = ref<File | null>(null);
@@ -149,7 +169,7 @@ async function analyzeCreditScore() {
         return;
     }
 
-    loading.value = true;
+    loadingCreditScore.value = true;
 
     const formData = new FormData();
     formData.append('file', selectedFile.value, selectedFile.value.name);
@@ -160,8 +180,10 @@ async function analyzeCreditScore() {
         body: formData
     })
 
+    creditScoreResult.value = data.creditScore;
+
     // do something with data
-    loading.value = false;
+    loadingCreditScore.value = false;
 }
 
 async function exportPDF() {
