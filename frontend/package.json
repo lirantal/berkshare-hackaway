@@ -11,6 +11,7 @@
     "ui:add": "npx shadcn-vue@latest add"
   },
   "dependencies": {
+    "@nuxtjs/mdc": "^0.13.2",
     "@pinia/nuxt": "^0.5.4",
     "@vueuse/core": "^11.0.3",
     "class-variance-authority": "^0.7.0",

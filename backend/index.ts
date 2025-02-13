@@ -11,6 +11,7 @@ import { signupRouter } from "./routes/signup.ts";
 import { logoutRouter } from "./routes/logout.ts";
 import { bankStatementsRouter } from "./routes/bank_statements.ts";
 import { bankProfileTemplate } from "./routes/bank_profile_template.ts";
+import { finchatRouter } from "./routes/finchat.ts";
 
 const app = express();
 
@@ -49,7 +50,7 @@ const apiRouter = express.Router();
 apiRouter.use(memosRouter, 
 	bankProfileRouter, userRouter, loginRouter, 
 	signupRouter, logoutRouter, bankStatementsRouter, 
-	bankProfileTemplate, creditScoreRouter);
+	bankProfileTemplate, creditScoreRouter, finchatRouter);
 app.use("/api", apiRouter);
 
 app.use('/data', (req, res, next) => {

@@ -32,6 +32,12 @@
         >
           Bank Profile
         </a>
+        <a
+          href="/chat"
+          class="text-muted-foreground transition-colors hover:text-foreground whitespace-nowrap"
+        >
+          Chat ✨
+        </a>
       </nav>
       <Sheet>
         <SheetTrigger as-child>
