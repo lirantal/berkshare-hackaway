@@ -65,8 +65,9 @@ memosRouter.post("/memos", (req, res) => {
   });
 });
 
-// @TODO a function recursiveJSONMerge to deeply merge the object source contactMemo into the 
-// target object baseContactInformation and return the object with the merged values
+// @TODO a function recursiveJSONMerge that loops through all the keys of the source
+// and checks if the key is an object it should call recursive merge again for the target
+// else it should just assign the key to the target and in the end return the target
 function recursiveJSONMerge(target, source) {
   for (const key in source) {
     if (source[key] instanceof Object) {
