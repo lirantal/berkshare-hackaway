@@ -35,12 +35,12 @@ bankProfileRouter.post('/bank_profile', (req, res) => {
             opening_balance = :opening_balance,
             fee_per_transaction = :fee_per_transaction,
             credit_limit = :credit_limit
-        WHERE user_id = :user_id
+        WHERE account_number = :account_number
     `).run({
         opening_balance: req.body.opening_balance,
         fee_per_transaction: req.body.fee_per_transaction,
         credit_limit: req.body.credit_limit,
-        user_id: req.body.user_id
+        account_number: req.body.account_number
     });
 
     return res.status(200).json({

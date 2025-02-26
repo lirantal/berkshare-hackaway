@@ -236,7 +236,8 @@ const save = async () => {
             opening_balance: opening_balance.value,
             fee_per_transaction: fee_per_transaction.value,
             credit_limit: credit_limit.value,
-            user_id: userId.value
+            account_number: account_number.value,
+            user_id: userId.value,
         }
     })
 
