@@ -17,7 +17,7 @@ bankProfileTemplate.get('/bank_profile_statement', (req, res) => {
         <h1>Bank Profile</h1>
         <p>Bank Name: Berkshare Hackaway</p>
 
-        <h2>Hello ${bankProfile.first_name} ${bankProfile.last_name}</h2>
+        <h2>Hello ${bankProfile.full_name}</h2>
         <p>${bankProfile.address}</p>
     </body>
     </html>
