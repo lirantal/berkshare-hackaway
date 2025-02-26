@@ -29,19 +29,33 @@ bankProfileRouter.post('/bank_profile', (req, res) => {
         return res.status(401).send('Unauthorized');
     }
 
-    db.prepare(`
+    const fieldsToUpdate = [];
+    const params = { account_number: req.body.account_number };
+
+    if (req.body.opening_balance !== undefined) {
+        fieldsToUpdate.push('opening_balance = :opening_balance');
+        params.opening_balance = req.body.opening_balance;
+    }
+    if (req.body.fee_per_transaction !== undefined) {
+        fieldsToUpdate.push('fee_per_transaction = :fee_per_transaction');
+        params.fee_per_transaction = req.body.fee_per_transaction;
+    }
+    if (req.body.credit_limit !== undefined) {
+        fieldsToUpdate.push('credit_limit = :credit_limit');
+        params.credit_limit = req.body.credit_limit;
+    }
+
+    if (fieldsToUpdate.length === 0) {
+        return res.status(400).send('No fields to update');
+    }
+
+    const query = `
         UPDATE bank_profile
-        SET
-            opening_balance = :opening_balance,
-            fee_per_transaction = :fee_per_transaction,
-            credit_limit = :credit_limit
+        SET ${fieldsToUpdate.join(', ')}
         WHERE account_number = :account_number
-    `).run({
-        opening_balance: req.body.opening_balance,
-        fee_per_transaction: req.body.fee_per_transaction,
-        credit_limit: req.body.credit_limit,
-        account_number: req.body.account_number
-    });
+    `;
+
+    db.prepare(query).run(params);
 
     return res.status(200).json({
         success: true
