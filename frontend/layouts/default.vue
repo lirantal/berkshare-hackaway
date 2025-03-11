@@ -59,32 +59,29 @@
               <Package2 class="h-6 w-6" />
               <span class="sr-only">Acme Inc</span>
             </a>
-            <a href="#" class="hover:text-foreground">
+            <a
+              href="/"
+              class="text-muted-foreground hover:text-foreground"
+            >
               Dashboard
             </a>
             <a
-              href="#"
+              href="/memos"
               class="text-muted-foreground hover:text-foreground"
             >
-              Orders
+              Memos
             </a>
             <a
-              href="#"
+              href="/bank_profile"
               class="text-muted-foreground hover:text-foreground"
             >
-              Products
+              Bank Profile
             </a>
             <a
-              href="#"
+              href="/chat"
               class="text-muted-foreground hover:text-foreground"
             >
-              Customers
-            </a>
-            <a
-              href="#"
-              class="text-muted-foreground hover:text-foreground"
-            >
-              Analytics
+              Chat ✨
             </a>
           </nav>
         </SheetContent>
