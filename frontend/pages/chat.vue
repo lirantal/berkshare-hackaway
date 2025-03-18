@@ -31,9 +31,9 @@
                         class="flex-1"
                     />
                     <Button type="submit" :disabled="isLoading || !userInput">
-                        <span v-if="isLoading">
-                            <span class="mr-2">Thinking...</span>
+                        <span v-if="isLoading" class="flex items-center">
                             <LoaderIcon class="h-4 w-4 animate-spin" />
+                            <span class="ml-2">Thinking...</span>
                         </span>
                         <span v-else>Send</span>
                     </Button>
