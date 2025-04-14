@@ -3,13 +3,13 @@ import { db } from "../lib/db.js";
 
 export const bankProfileTemplate = express.Router();
 
-bankProfileTemplate.get('/bank_profile_statement', (req, res) => {
+bankProfileTemplate.get('/bank_profile_statement', async (req, res) => {
     if (!res.locals.user) {
         return res.status(401).send('Unauthorized');
     }
 
     const user_id = req.query.user_id;
-    const bankProfile = db.prepare(`SELECT * FROM user_profile WHERE user_id = ?`).get(user_id);
+    const bankProfile = await db().get(`SELECT * FROM user_profile WHERE user_id = ?`, user_id);
 
     const htmlTemplate = `
     <html>

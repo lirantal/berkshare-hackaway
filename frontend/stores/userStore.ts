@@ -12,7 +12,6 @@ export const useUserStore = defineStore("user", {
     async fetchUser() {
       try {
         const response = await $fetch("/api/user");
-        this.username = response.username;
         this.user_id = response.user_id;
         this.full_name = response.full_name;
         this.email = response.email;
@@ -21,6 +20,7 @@ export const useUserStore = defineStore("user", {
         this.role = response.role;
       } catch (err) {
         // user is not logged-in
+        console.error(err);
       }
     },
   },

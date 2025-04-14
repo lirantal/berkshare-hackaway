@@ -1,6 +1,18 @@
-import Database from "better-sqlite3";
+import { open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
-export const db = new Database('database.db', { verbose: console.log });
+let dbConn;
+
+export function db() {
+  return dbConn;
+}
+
+export async function init() {
+  dbConn = await open({
+    filename: 'database.db',
+    driver: sqlite3.Database
+  });
+}
 
 export interface DatabaseUser {
 	id: string;

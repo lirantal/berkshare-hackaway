@@ -1,30 +1,17 @@
-import { Lucia } from "lucia";
-import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
-import { db } from "./db.js";
-
-import type { DatabaseUser } from "./db.js";
-
-const adapter = new BetterSqlite3Adapter(db, {
-	user: "user",
-	session: "session"
+import { betterAuth } from "better-auth";
+import { openAPI } from "better-auth/plugins";
+import Database from "better-sqlite3";
+ 
+export const auth = betterAuth({
+    database: new Database("./database.db"),
+	trustedOrigins: [
+		"http://localhost:3000",
+		"http://localhost:3005",
+	],
+	emailAndPassword: {  
+        enabled: true
+    },
+	plugins: [
+		openAPI(),
+	]
 });
-
-export const lucia = new Lucia(adapter, {
-	sessionCookie: {
-		attributes: {
-			secure: process.env.NODE_ENV === "production"
-		}
-	},
-	getUserAttributes: (attributes) => {
-		return {
-			username: attributes.username
-		};
-	}
-});
-
-declare module "lucia" {
-	interface Register {
-		Lucia: typeof lucia;
-		DatabaseUserAttributes: Omit<DatabaseUser, "id">;
-	}
-}

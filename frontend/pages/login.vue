@@ -60,20 +60,20 @@ const router = useRouter();
 const handleSubmit = async () => {
   errorMessage.value = '';
   try {
-    const { data, error } = await useFetch('/api/login', {
+    const { data, error } = await useFetch('/api/auth/sign-in/email', {
       method: 'POST',
-      body: { username: username.value, password: password.value },
+      body: { email: username.value, password: password.value },
     });
 
     if (error.value) {
       errorMessage.value = error.value.message;
-    } else if (data.value.success) {
+    } else if (data.value.token) {
     
         // @TBD replace native DOM API with native vue-router API
         // `router.push('/');` once we add proper reactivity to the app
         window.location.href = '/';
     } else {
-      errorMessage.value = data.value.message;
+      errorMessage.value = error.value.message;
     }
   } catch (err) {
     errorMessage.value = 'An error occurred. Please try again.';

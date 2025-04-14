@@ -11,9 +11,7 @@ loginRouter.post("/login", async (req, res) => {
 	const username: string | null = req.body.username ?? null;
 	const password: string | null = req.body.password ?? null;
 	
-	const existingUser = db.prepare("SELECT * FROM user WHERE username = ?").get(username) as
-		| DatabaseUser
-		| undefined;
+	const existingUser = await db().get("SELECT * FROM user WHERE username = ?", username)
 	if (!existingUser) {
 		return res.status(400).json({ error: "Invalid username or password" });
 	}

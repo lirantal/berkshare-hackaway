@@ -15,7 +15,7 @@ creditScoreRouter.post('/credit_score', upload.single('file'), async (req, res) 
     }
 
     if (res.locals.user.isAdmin) {
-        console.log(`Detected admin user: ${res.locals.user.username}`);
+        console.log(`Detected admin user: ${res.locals.user.email}`);
     } else {
         return res.status(401).send('Unauthorized');
     }

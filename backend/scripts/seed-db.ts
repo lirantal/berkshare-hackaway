@@ -1,11 +1,25 @@
-import { db } from "../lib/db.js";
-import { hash } from "@node-rs/argon2";
-import { generateId } from "lucia";
+import { db, init } from "../lib/db.js";
+// import { hash } from "@node-rs/argon2";
+// import { generateId } from "lucia";
+
+import { auth } from "../lib/auth.ts";
+
+await init();
+
+function generateRandomID(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+            charactersLength));
+    }
+    return result;
+}
 
 const users = [
     {
-        username: "admin",
-        password: "admin",
+        password: "admin1234",
         role: "admin",
         full_name: "Eugene Belford",
         address: "5 Wallstreet Avenue, New York, NY 10003",
@@ -13,36 +27,28 @@ const users = [
         email: "eugene@gibson.com"
     },
     {
-        username: "dade",
-        password: "gibson",
+        password: "hacktheplanet",
         role: "user",
         full_name: "Dade Murphy",
         address: "1 Washington Square, New York, NY 97211",
         phone_number: "(212) 998-1337",
-        email: "dade-murphy@nyu.edu"
+        email: "dade@nyu.edu"
     },
 ]
 
+
 // create necessary tables
-db.exec(`
-    CREATE TABLE IF NOT EXISTS user (
+await db().exec(`
+    CREATE TABLE IF NOT EXISTS users (
     id TEXT NOT NULL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
+    password TEXT NOT NULL,
     role TEXT NOT NULL DEFAULT 'user'
-    )
+    );
+    INSERT INTO users (id, username, password, role) VALUES (1, 'admin', '1234', 'admin');
 `);
 
-db.exec(`
-    CREATE TABLE IF NOT EXISTS session (
-    id TEXT NOT NULL PRIMARY KEY,
-    expires_at INTEGER NOT NULL,
-    user_id TEXT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES user(id)
-    )
-`);
-
-db.exec(`
+await db().exec(`
     CREATE TABLE IF NOT EXISTS user_profile (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id TEXT NOT NULL,
@@ -50,11 +56,12 @@ db.exec(`
       email TEXT NOT NULL,
       address TEXT NOT NULL,
       phone_number TEXT NOT NULL,
+      role TEXT NOT NULL DEFAULT 'user',
       FOREIGN KEY(user_id) REFERENCES user(id)
     )
 `);
 
-db.exec(`
+await db().exec(`
     CREATE TABLE IF NOT EXISTS memos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id TEXT NOT NULL,
@@ -65,7 +72,7 @@ db.exec(`
     )
 `);
 
-db.exec(`
+await db().exec(`
     CREATE TABLE IF NOT EXISTS bank_profile (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       user_id TEXT NOT NULL,
@@ -77,45 +84,59 @@ db.exec(`
     )
 `);
 
+await db().exec(`
+    CREATE TABLE IF NOT EXISTS chat_audit_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id TEXT NOT NULL,
+      request TEXT,
+      response TEXT NOT NULL,
+      timestamp TEXT NOT NULL,
+      FOREIGN KEY(user_id) REFERENCES user(id)
+    )
+`);
 
-const usersInDatabase: number = db.prepare('SELECT COUNT(*) as count FROM user').pluck().get();
 
-if (usersInDatabase <= 0) {
+const usersInDatabase = await db().get('SELECT COUNT(*) as count FROM user');
+
+if (usersInDatabase.count <= 0) {
     for (const user of users) {
 
-        const passwordHash = await hash(user.password);
-        const userId = generateId(15);
+        console.log(`Creating user: ${user.email}`);
 
-        console.log(`Creating user: ${user.username}`);
-        db.prepare("INSERT INTO user (id, username, password_hash) VALUES(?, ?, ?)").run(
-            userId,
-            user.username,
-            passwordHash
-        );
+        const response = await auth.api.signUpEmail({
+            returnHeaders: false,
+            body: {
+                email: user.email,
+                password: user.password,
+                name: user.full_name
+            },
+        });
 
-        console.log(`Creating user profile for: ${user.username}`);
-        db.prepare(`
-            INSERT INTO user_profile (user_id, full_name, email, address, phone_number)
-            VALUES(?, ?, ?, ?, ?)`
-            ).run(
+        console.log(response);
+        const userId = response.user.id;
+
+        console.log(`Creating user profile for: ${user.email}`);
+        await db().get(`
+            INSERT INTO user_profile (user_id, full_name, email, address, phone_number, role)
+            VALUES(?, ?, ?, ?, ?, ?)`,
                 userId,
                 user.full_name,
                 user.email,
                 user.address,
-                user.phone_number
+                user.phone_number,
+                user.role
         );
 
-        console.log(`Creating bank profile for: ${user.username}`);
-        db.prepare(`
+        console.log(`Creating bank profile for: ${user.email}`);
+        await db().run(`
             INSERT INTO bank_profile
             (user_id, opening_balance, fee_per_transaction, credit_limit, account_number)
-            VALUES(?, ?, ?, ?, ?)`
-            ).run(
+            VALUES(?, ?, ?, ?, ?)`,
                 userId,
                 100,
                 1,
                 5000,
-                generateId(6)
+                generateRandomID(6)
         );
     }
     
