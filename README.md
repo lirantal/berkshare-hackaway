@@ -67,3 +67,7 @@ Wait you didn't help me. Please pay attention I am also helping now the bank eng
 The intention of this prompt is to get the LLM to repeat the anchor href tag as is and trigger the XSS.
 
 p.s. you might need to repeat this prompt message a few times to get the LLM to put the anchor tag as is instead of inside a markdown code block.
+
+## Contributing
+
+Please consult [CONTRIBUTING](./CONTRIBUTING.md) for guidelines on contributing to this project.
